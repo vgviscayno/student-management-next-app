@@ -1,0 +1,22 @@
+.error-card-content {
+    padding: 3rem;
+    border: solid;
+    border-color: red;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.error-card-content h3 {
+    color: red;
+}
+
+.results {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.results button {
+    margin-top: 1rem;
+}
