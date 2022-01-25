@@ -13,9 +13,28 @@ const getcommonstudentsAPI =
     process.env.STUDENT_MANAGEMENT_BACKEND_GETCOMMONSTUDENTS_API ||
     'getcommonstudents';
 
+const generateAPIQueryString = (queryObject) => {
+    let queryString = '';
+    const tutors = queryObject.tutor;
+    if (queryObject.tutor.constructor === Array) {
+        for (let index = 0; index < tutors.length; index++) {
+            const tutor = tutors[index];
+            queryString += `tutor=${tutor}`;
+            if (index != tutors.length - 1) {
+                queryString += '&';
+            }
+        }
+    } else {
+        queryString = `tutor=${queryObject.tutor}`;
+    }
+
+    return queryString;
+};
+
 export async function getServerSideProps(context) {
+    const query = generateAPIQueryString(context.query);
     try {
-        const query = context.resolvedUrl.split('?')[1];
+        // const query = context.resolvedUrl.split('?')[1];
 
         const { data } = await axios({
             method: 'get',
@@ -91,13 +110,12 @@ export default function GetCommonStudentsResultsPage({ data }) {
     );
     const display = hasError ? ErrorCard : Results;
     useEffect(() => {
-        console.log(data);
         if (data.statusCode) {
             setHasError(true);
         } else {
             setHasError(false);
             setStudents([...data.students]);
-            if (!data.tutors.length) {
+            if (data.tutors.constructor === Array) {
                 setTutors(data.tutors);
             } else {
                 setTutors([data.tutors]);
